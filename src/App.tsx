@@ -323,6 +323,34 @@ export default function App() {
         </AnimatePresence>
       </main>
 
+      {/* Floating Progress Widget (Mobile/Desktop) */}
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-[60]"
+      >
+        <div className="bg-white/40 backdrop-blur-xl border border-white/30 p-3 md:p-4 shadow-2xl rounded-2xl w-40 md:w-52">
+          <div className="flex justify-between items-end mb-2 md:mb-3">
+            <p className="micro-label !opacity-100 text-ink/80 !text-[8px] md:!text-[10px]">Your Progress</p>
+            <p className="text-lg md:text-xl font-bold tracking-tighter text-ink">
+              {completedGames.length}<span className="opacity-20">/</span>{ARTICLES.length}
+            </p>
+          </div>
+          <div className="h-1 w-full bg-ink/10 rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-ink"
+              initial={{ width: 0 }}
+              animate={{ width: `${(completedGames.length / ARTICLES.length) * 100}%` }}
+            />
+          </div>
+          <p className="mt-2 md:mt-3 text-[8px] md:text-[9px] font-mono uppercase tracking-widest text-ink/40 leading-tight">
+            {isAllCompleted 
+              ? "All puzzles solved." 
+              : `${ARTICLES.length - completedGames.length} more to unlock.`}
+          </p>
+        </div>
+      </motion.div>
+
       <footer className="border-t border-line bg-white py-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-4">
