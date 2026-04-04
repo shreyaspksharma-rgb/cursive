@@ -6,67 +6,186 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { WelcomeModal } from './components/WelcomeModal';
+import { AuthModal } from './components/AuthModal';
 import { ArticleCard } from './components/ArticleCard';
 import { GameView } from './components/GameView';
 import { ARTICLES } from './constants';
-import { Mail, Sparkles, Search, X } from 'lucide-react';
+import { Mail, Sparkles, Search, X, LogOut, User, LogIn } from 'lucide-react';
+import { auth, db } from './firebase';
+import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
+import { doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId: string | undefined;
+    email: string | null | undefined;
+    emailVerified: boolean | undefined;
+    isAnonymous: boolean | undefined;
+    tenantId: string | null | undefined;
+    providerInfo: {
+      providerId: string;
+      displayName: string | null;
+      email: string | null;
+      photoUrl: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData.map(provider => ({
+        providerId: provider.providerId,
+        displayName: provider.displayName,
+        email: provider.email,
+        photoUrl: provider.photoURL
+      })) || []
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 export default function App() {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [hasSeenWelcome, setHasSeenWelcome] = useState(false);
   const [currentArticleId, setCurrentArticleId] = useState<number | null>(null);
   const [completedGames, setCompletedGames] = useState<number[]>([]);
   const [userAnswers, setUserAnswers] = useState<Record<number, any>>({});
   const [mistakes, setMistakes] = useState<Record<number, number>>({});
   const [showEmailer, setShowEmailer] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [emailInput, setEmailInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Auth State Listener
   useEffect(() => {
-    // Load progress from localStorage
-    const savedProgress = localStorage.getItem('cursive_progress');
-    if (savedProgress) {
-      try {
-        const { completed, answers, userMistakes, email } = JSON.parse(savedProgress);
-        if (completed) setCompletedGames(completed);
-        if (answers) setUserAnswers(answers);
-        if (userMistakes) setMistakes(userMistakes);
-        if (email) setUserEmail(email);
-      } catch (e) {
-        console.error("Failed to load progress", e);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsAuthReady(true);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Load progress (Firestore or LocalStorage)
+  useEffect(() => {
+    if (!isAuthReady) return;
+
+    if (user) {
+      // Load from Firestore
+      const progressRef = doc(db, 'progress', user.uid);
+      const unsubscribe = onSnapshot(progressRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (data.completedGames) setCompletedGames(data.completedGames);
+          if (data.userAnswers) setUserAnswers(data.userAnswers);
+          if (data.mistakes) setMistakes(data.mistakes);
+        }
+      }, (error) => {
+        handleFirestoreError(error, OperationType.GET, `progress/${user.uid}`);
+      });
+
+      // Load profile (welcome state)
+      const userRef = doc(db, 'users', user.uid);
+      getDoc(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          setHasSeenWelcome(snapshot.data().hasSeenWelcome || false);
+        }
+      }).catch(error => {
+        handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
+      });
+
+      return () => unsubscribe();
+    } else {
+      // Load from LocalStorage for anonymous users
+      const savedProgress = localStorage.getItem('cursive_progress');
+      if (savedProgress) {
+        try {
+          const { completed, answers, userMistakes } = JSON.parse(savedProgress);
+          if (completed) setCompletedGames(completed);
+          if (answers) setUserAnswers(answers);
+          if (userMistakes) setMistakes(userMistakes);
+        } catch (e) {
+          console.error("Failed to load progress", e);
+        }
       }
     }
-  }, []);
+  }, [user, isAuthReady]);
 
   // Save progress whenever it changes
   useEffect(() => {
-    if (completedGames.length > 0 || userEmail) {
-      localStorage.setItem('cursive_progress', JSON.stringify({
-        completed: completedGames,
-        answers: userAnswers,
-        userMistakes: mistakes,
-        email: userEmail
-      }));
-    }
-  }, [completedGames, userAnswers, mistakes, userEmail]);
+    if (!isAuthReady) return;
 
-  const handleCloseWelcome = () => {
+    if (user) {
+      // Save to Firestore
+      const progressRef = doc(db, 'progress', user.uid);
+      setDoc(progressRef, {
+        uid: user.uid,
+        completedGames,
+        userAnswers,
+        mistakes,
+        updatedAt: serverTimestamp()
+      }, { merge: true }).catch(error => {
+        handleFirestoreError(error, OperationType.WRITE, `progress/${user.uid}`);
+      });
+    } else {
+      // Save to LocalStorage for anonymous users
+      if (completedGames.length > 0) {
+        localStorage.setItem('cursive_progress', JSON.stringify({
+          completed: completedGames,
+          answers: userAnswers,
+          userMistakes: mistakes
+        }));
+      }
+    }
+  }, [completedGames, userAnswers, mistakes, user, isAuthReady]);
+
+  const handleCloseWelcome = async () => {
     setHasSeenWelcome(true);
-  };
-
-  const handleSignIn = () => {
-    if (emailInput && emailInput.includes('@')) {
-      setUserEmail(emailInput);
-      setEmailInput("");
+    if (user) {
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        hasSeenWelcome: true,
+        updatedAt: serverTimestamp()
+      }, { merge: true }).catch(error => {
+        handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}`);
+      });
     }
   };
 
-  const handleSignOut = () => {
-    setUserEmail(null);
-    localStorage.removeItem('cursive_progress');
-    setCompletedGames([]);
-    setUserAnswers({});
-    setMistakes({});
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setCompletedGames([]);
+      setUserAnswers({});
+      setMistakes({});
+      localStorage.removeItem('cursive_progress');
+    } catch (error) {
+      console.error("Sign out error", error);
+    }
   };
 
   const handleCompleteGame = (id: number, answer: any) => {
@@ -102,6 +221,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <WelcomeModal isOpen={!hasSeenWelcome} onClose={handleCloseWelcome} />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
 
       {/* Header */}
       <header className="py-2 text-center border-b border-line sticky top-0 bg-white z-40">
@@ -135,8 +255,32 @@ export default function App() {
               </button>
             )}
           </div>
-          <div className="micro-label">
-            Progress: {completedGames.length}/{ARTICLES.length}
+          <div className="flex items-center gap-4">
+            <div className="micro-label">
+              Progress: {completedGames.length}/{ARTICLES.length}
+            </div>
+            {user ? (
+              <div className="flex items-center gap-3 bg-ink/5 px-3 py-1.5 rounded-full">
+                <div className="w-5 h-5 bg-ink rounded-full flex items-center justify-center">
+                  <User size={10} className="text-white" />
+                </div>
+                <span className="text-[10px] font-bold tracking-tight hidden sm:inline">{user.displayName || user.email}</span>
+                <button 
+                  onClick={handleSignOut}
+                  className="opacity-40 hover:opacity-100 transition-opacity"
+                  title="Sign Out"
+                >
+                  <LogOut size={12} />
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => setShowAuthModal(true)}
+                className="bg-ink text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
         
@@ -361,12 +505,12 @@ export default function App() {
                 Sign in to save your progress across the week.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                {userEmail ? (
+                {user ? (
                   <div className="flex flex-col gap-2 w-full">
                     <div className="bg-emerald-50 border border-emerald-100 px-4 py-3 rounded-xl flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-medium text-emerald-900">Signed in as {userEmail}</span>
+                        <span className="text-sm font-medium text-emerald-900">Signed in as {user.displayName || user.email}</span>
                       </div>
                       <button 
                         onClick={handleSignOut}
@@ -378,21 +522,12 @@ export default function App() {
                     <p className="text-xs opacity-40 italic">Your progress is automatically saved to your account.</p>
                   </div>
                 ) : (
-                  <>
-                    <input 
-                      type="email" 
-                      placeholder="your@email.com" 
-                      value={emailInput}
-                      onChange={(e) => setEmailInput(e.target.value)}
-                      className="bg-ink/5 border border-line px-4 py-2 rounded-xl flex-grow focus:outline-none focus:border-ink transition-colors w-full"
-                    />
-                    <button 
-                      onClick={handleSignIn}
-                      className="bg-ink text-bg px-6 py-2 rounded-xl font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap"
-                    >
-                      Sign in to save your answers.
-                    </button>
-                  </>
+                  <button 
+                    onClick={() => setShowAuthModal(true)}
+                    className="bg-ink text-bg px-8 py-3 rounded-xl font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap flex items-center gap-2"
+                  >
+                    <LogIn size={14} /> Sign in to save your answers.
+                  </button>
                 )}
               </div>
             </div>

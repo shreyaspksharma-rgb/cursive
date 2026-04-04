@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "User Profile",
+      "description": "Stores user-specific settings and metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "hasSeenWelcome": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "userProgress": {
+      "title": "User Progress",
+      "description": "Stores the user's puzzle completion progress",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "completedGames": { "type": "array", "items": { "type": "integer" } },
+        "userAnswers": { "type": "object" },
+        "mistakes": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "userProfile",
+      "description": "User profile information"
+    },
+    "/progress/{uid}": {
+      "schema": "userProgress",
+      "description": "User puzzle progress"
+    }
+  }
+}
