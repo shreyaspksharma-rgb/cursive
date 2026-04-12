@@ -25,6 +25,20 @@
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid"]
+    },
+    "pitch": {
+      "title": "Story Pitch",
+      "description": "A user-submitted story or game pitch",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "gameIdea": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "title", "description"]
     }
   },
   "firestore": {
@@ -35,6 +49,10 @@
     "/progress/{uid}": {
       "schema": "userProgress",
       "description": "User puzzle progress"
+    },
+    "/pitches/{pitchId}": {
+      "schema": "pitch",
+      "description": "User submitted story pitches"
     }
   }
 }

@@ -7,10 +7,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { WelcomeModal } from './components/WelcomeModal';
 import { AuthModal } from './components/AuthModal';
+import { PitchModal } from './components/PitchModal';
 import { ArticleCard } from './components/ArticleCard';
 import { GameView } from './components/GameView';
 import { ARTICLES } from './constants';
-import { Mail, Sparkles, Search, X, LogOut, User, LogIn } from 'lucide-react';
+import { Mail, Sparkles, Search, X, LogOut, User, LogIn, Send } from 'lucide-react';
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
@@ -70,6 +71,7 @@ export default function App() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showPitchModal, setShowPitchModal] = useState(false);
   const [hasSeenWelcome, setHasSeenWelcome] = useState(false);
   const [currentArticleId, setCurrentArticleId] = useState<number | null>(null);
   const [completedGames, setCompletedGames] = useState<number[]>([]);
@@ -77,6 +79,18 @@ export default function App() {
   const [mistakes, setMistakes] = useState<Record<number, number>>({});
   const [showEmailer, setShowEmailer] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Handle URL parameters for sharing
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const articleId = params.get('article');
+    if (articleId) {
+      const id = parseInt(articleId);
+      if (ARTICLES.some(a => a.id === id)) {
+        setCurrentArticleId(id);
+      }
+    }
+  }, []);
 
   // Auth State Listener
   useEffect(() => {
@@ -222,6 +236,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-white">
       <WelcomeModal isOpen={!hasSeenWelcome} onClose={handleCloseWelcome} />
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      <PitchModal isOpen={showPitchModal} onClose={() => setShowPitchModal(false)} user={user} />
 
       {/* Header */}
       <header className="py-2 text-center border-b border-line sticky top-0 bg-white z-40">
@@ -304,6 +319,7 @@ export default function App() {
               onBack={() => setCurrentArticleId(null)}
               onComplete={(answer) => handleCompleteGame(currentArticleId, answer)}
               onMistake={() => handleMistake(currentArticleId)}
+              onPitch={() => setShowPitchModal(true)}
               isCompleted={completedGames.includes(currentArticleId)}
             />
           ) : (
@@ -462,6 +478,28 @@ export default function App() {
                   </div>
                 </motion.div>
               )}
+
+              {/* Pitch CTA Section */}
+              {!searchQuery && (
+                <section className="mt-12 mb-4">
+                  <div className="relative overflow-hidden rounded-3xl bg-ink text-bg p-8 md:p-10 text-center">
+                    <div className="relative z-10 max-w-2xl mx-auto">
+                      <h2 className="text-2xl md:text-3xl font-bold tracking-tighter mb-3 leading-tight">
+                        Your story belongs <span className="italic font-serif">in cursive.</span>
+                      </h2>
+                      <p className="text-sm md:text-base opacity-60 font-serif mb-6 leading-relaxed">
+                        Redefine how news is experienced. Pitch your interactive story idea.
+                      </p>
+                      <button 
+                        onClick={() => setShowPitchModal(true)}
+                        className="bg-white text-ink px-6 py-2.5 rounded-xl font-mono text-[10px] uppercase tracking-[0.2em] font-bold hover:scale-105 transition-all shadow-lg flex items-center gap-2 mx-auto"
+                      >
+                        <Send size={14} /> Pitch Your Story
+                      </button>
+                    </div>
+                  </div>
+                </section>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -534,7 +572,8 @@ export default function App() {
             <div>
               <p className="micro-label mb-4">Account</p>
               <ul className="space-y-2 font-sans text-sm">
-                <li><button onClick={() => setShowEmailer(true)} className="hover:underline">Review Answers</button></li>
+                <li><button onClick={() => setShowEmailer(true)} className="hover:underline text-left">Review Answers</button></li>
+                <li><button onClick={() => setShowPitchModal(true)} className="hover:underline text-left">Pitch a Story</button></li>
                 <li><a href="#" className="hover:underline">Settings</a></li>
               </ul>
             </div>

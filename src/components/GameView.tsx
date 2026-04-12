@@ -10,7 +10,9 @@ import {
   Keyboard, 
   Type,
   HelpCircle,
-  Info
+  Info,
+  Share2,
+  Check
 } from 'lucide-react';
 import { Article, GameType } from '../constants';
 
@@ -29,8 +31,9 @@ const getGameIcon = (type: GameType) => {
 interface GameViewProps {
   article: Article;
   onBack: () => void;
-  onComplete: () => void;
+  onComplete: (answer: any) => void;
   onMistake: () => void;
+  onPitch: () => void;
   isCompleted: boolean;
 }
 
@@ -39,11 +42,38 @@ export const GameView: React.FC<GameViewProps> = ({
   onBack, 
   onComplete, 
   onMistake,
+  onPitch,
   isCompleted 
 }) => {
   const [gameState, setGameState] = useState<any>(null);
   const [isCorrect, setIsCorrect] = useState(isCompleted);
   const [showHelp, setShowHelp] = useState(false);
+  const [isShared, setIsShared] = useState(false);
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}${window.location.pathname}?article=${article.id}`;
+    const shareData = {
+      title: `Cursive: ${article.title}`,
+      text: article.description,
+      url: shareUrl,
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        setIsShared(true);
+        setTimeout(() => setIsShared(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    }
+  };
 
   useEffect(() => {
     // Initialize game state based on type
@@ -117,6 +147,13 @@ export const GameView: React.FC<GameViewProps> = ({
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <button 
+                onClick={handleShare}
+                className={`flex items-center gap-2 micro-label px-3 py-1.5 rounded-full border transition-all ${isShared ? 'bg-emerald-500 text-white border-emerald-500' : 'border-line hover:border-ink'}`}
+              >
+                {isShared ? <Check size={12} /> : <Share2 size={12} />}
+                {isShared ? 'Link Copied' : 'Share'}
+              </button>
               <button 
                 onClick={() => setShowHelp(!showHelp)}
                 className={`flex items-center gap-2 micro-label px-3 py-1.5 rounded-full border transition-all ${showHelp ? 'bg-ink text-bg border-ink' : 'border-line hover:border-ink'}`}
@@ -398,7 +435,7 @@ export const GameView: React.FC<GameViewProps> = ({
           </button>
         )}
 
-        <div className="mt-12 pt-8 border-t border-line flex justify-center">
+        <div className="mt-12 pt-8 border-t border-line flex flex-col items-center gap-8">
           <button
             onClick={onBack}
             className="flex items-center gap-3 bg-ink/5 hover:bg-ink hover:text-bg px-8 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all group"
@@ -406,6 +443,19 @@ export const GameView: React.FC<GameViewProps> = ({
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> 
             Back to Publication
           </button>
+
+          {/* Pitch CTA inside Article - Small and at the end */}
+          <div className="mt-8 w-full bg-ink/5 rounded-2xl p-6 text-center border border-line/5">
+            <p className="text-xs md:text-sm opacity-60 font-serif mb-4">
+              Have a story like this? We're always looking for new voices.
+            </p>
+            <button 
+              onClick={onPitch}
+              className="bg-ink text-bg px-6 py-2 rounded-lg font-mono text-[9px] uppercase tracking-widest hover:opacity-90 transition-all inline-flex items-center gap-2"
+            >
+              <Sparkles size={12} /> Pitch Your Idea
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>

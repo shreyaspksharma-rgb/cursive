@@ -73,6 +73,16 @@ service cloud.firestore {
              data.updatedAt is timestamp;
     }
 
+    function isValidPitch(data) {
+      return hasOnlyAllowedFields(['uid', 'email', 'title', 'description', 'gameIdea', 'createdAt']) &&
+             data.uid == request.auth.uid &&
+             data.email == request.auth.token.email &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.description is string && data.description.size() > 0 && data.description.size() < 2000 &&
+             (data.gameIdea == null || (data.gameIdea is string && data.gameIdea.size() < 2000)) &&
+             data.createdAt is timestamp;
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
@@ -86,6 +96,11 @@ service cloud.firestore {
     match /progress/{uid} {
       allow read: if isOwner(uid) || isAdmin();
       allow create, update: if isOwner(uid) && isValidProgress(request.resource.data);
+    }
+
+    match /pitches/{pitchId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated() && isValidPitch(request.resource.data);
     }
 
     // Default deny
