@@ -39,6 +39,21 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "email", "title", "description"]
+    },
+    "errorReport": {
+      "title": "Error Report",
+      "description": "A user-submitted report about a bug, typo, or issue",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "articleId": { "type": "integer" },
+        "articleTitle": { "type": "string" },
+        "reportType": { "type": "string", "enum": ["typo", "bug", "formatting", "other"] },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["articleId", "reportType", "description", "createdAt"]
     }
   },
   "firestore": {
@@ -53,6 +68,10 @@
     "/pitches/{pitchId}": {
       "schema": "pitch",
       "description": "User submitted story pitches"
+    },
+    "/errorReports/{reportId}": {
+      "schema": "errorReport",
+      "description": "User submitted error reports"
     }
   }
 }

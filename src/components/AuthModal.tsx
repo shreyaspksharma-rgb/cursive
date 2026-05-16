@@ -97,7 +97,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
-            className="bg-white text-black max-w-md w-full p-8 relative shadow-2xl border border-gray-200 rounded-3xl"
+            className="bg-white text-black max-w-md w-full p-8 relative shadow-2xl border border-gray-200 rounded-none"
           >
             <button
               onClick={onClose}
@@ -116,7 +116,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </div>
 
             {error && (
-              <div className="mb-6 p-3 bg-red-50 border border-red-100 text-red-600 text-xs rounded-xl text-center">
+              <div className="mb-6 p-3 bg-red-50 border border-red-100 text-red-600 text-xs rounded-none text-center">
                 {error}
               </div>
             )}
@@ -132,7 +132,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     placeholder="Display Name"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full bg-black/5 border border-gray-200 pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:border-black transition-colors"
+                    className="w-full bg-black/5 border border-gray-200 pl-12 pr-4 py-3 rounded-none focus:outline-none focus:border-black transition-colors"
                   />
                 </div>
               )}
@@ -166,7 +166,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-black text-white py-3 font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-opacity rounded-xl flex items-center justify-center gap-2"
+                className="w-full bg-black text-white py-3 font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-opacity rounded-none flex items-center justify-center gap-2"
               >
                 {loading ? 'Processing...' : isLogin ? <><LogIn size={16} /> Sign In</> : <><UserPlus size={16} /> Create Account</>}
               </button>
@@ -184,7 +184,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="w-full bg-white border border-gray-200 text-black py-3 font-mono text-xs uppercase tracking-widest hover:bg-gray-50 transition-colors rounded-xl flex items-center justify-center gap-2"
+              className="w-full bg-white border border-gray-200 text-black py-3 font-mono text-xs uppercase tracking-widest hover:bg-gray-50 transition-colors rounded-none flex items-center justify-center gap-2"
             >
               <Chrome size={16} /> Google Account
             </button>

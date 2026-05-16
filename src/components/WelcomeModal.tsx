@@ -21,7 +21,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose }) =
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
-            className="bg-white text-black max-w-lg w-full p-6 md:p-10 relative shadow-2xl border border-gray-200 rounded-3xl max-h-[90vh] overflow-y-auto custom-scrollbar"
+            className="bg-white text-black max-w-lg w-full p-6 md:p-10 relative shadow-2xl border border-gray-200 rounded-none max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
             <button
               onClick={onClose}
@@ -70,7 +70,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose }) =
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onClose}
-              className="mt-8 w-full bg-black text-white py-3 font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-opacity rounded-xl"
+              className="mt-8 w-full bg-black text-white py-3 font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-opacity rounded-none"
             >
               Enter Publication
             </motion.button>

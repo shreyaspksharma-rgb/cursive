@@ -66,7 +66,7 @@ export const PitchModal: React.FC<PitchModalProps> = ({ isOpen, onClose, user })
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
-            className="bg-white text-black max-w-2xl w-full p-8 md:p-12 relative shadow-2xl border border-gray-200 rounded-3xl my-8"
+            className="bg-white text-black max-w-2xl w-full p-8 md:p-12 relative shadow-2xl border border-gray-200 rounded-none my-8"
           >
             <button
               onClick={onClose}
@@ -101,7 +101,7 @@ export const PitchModal: React.FC<PitchModalProps> = ({ isOpen, onClose, user })
                 </div>
 
                 {error && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl">
+                  <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-none">
                     {error}
                   </div>
                 )}
@@ -117,7 +117,7 @@ export const PitchModal: React.FC<PitchModalProps> = ({ isOpen, onClose, user })
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       required
-                      className="w-full bg-black/5 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:border-black transition-colors"
+                      className="w-full bg-black/5 border border-gray-200 px-4 py-3 rounded-none focus:outline-none focus:border-black transition-colors"
                     />
                   </div>
 
@@ -151,7 +151,7 @@ export const PitchModal: React.FC<PitchModalProps> = ({ isOpen, onClose, user })
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-black text-white py-4 font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-all rounded-2xl shadow-lg flex items-center justify-center gap-3"
+                    className="w-full bg-black text-white py-4 font-mono text-xs uppercase tracking-widest hover:opacity-90 transition-all rounded-none shadow-lg flex items-center justify-center gap-3"
                   >
                     {loading ? 'Submitting...' : (
                       <>

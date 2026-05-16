@@ -1,4 +1,4 @@
-export type GameType = 'fill-blanks' | 'rearrange' | 'double-click' | 'poetic-fill' | 'type-answer' | 'anagrams';
+export type GameType = 'fill-blanks' | 'rearrange' | 'double-click' | 'poetic-fill' | 'type-answer' | 'anagrams' | 'tangential-points' | 'compounding-effects' | 'em-dash-phrases' | 'paragraph-principles';
 
 export interface Article {
   id: number;
@@ -161,6 +161,126 @@ export const ARTICLES: Article[] = [
       ],
       anagrams: ["photovoltaci", "prgoress", "priotrisniag"],
       answers: ["photovoltaic", "progress", "prioritising"]
+    }
+  },
+  {
+    id: 7,
+    title: "Ceasefire stabilises markets but risks remain for shipping and oil",
+    description: "US-Iran ceasefire deal eases immediate tensions, lifting markets and oil sentiment, but deeper risks persist across global shipping and trade systems.",
+    image: "/src/assets/images/regenerated_image_1778326646027.png",
+    gameType: 'tangential-points',
+    gameExplanation: "Drag the bulled phrases to their correct positions in the text. Each bullet point precedes a tangential phrase that belongs elsewhere.",
+    reasoning: "The article highlights specific risks in oil corridors and shipping activity. The jumbled phrases correct the context: particularly around the Strait of Hormuz is the primary risk area for oil supply, shipping is a key economic indicator, and postponed cargo shipments include critical products like crude oil.",
+    content: {
+      headline: "Ceasefire stabilises markets but risks remain for shipping and oil",
+      editorial: "US-Iran ceasefire deal eases immediate tensions, lifting markets and oil sentiment, but deeper risks persist across global shipping and trade systems.",
+      paragraphs: [
+        "DUBAI: The US-Iran ceasefire deal has delivered immediate relief to global markets, calming fears of disruption in one of the world’s most critical energy corridors. Oil prices softened, while equity markets across Asia and India opened higher, reflecting a swift improvement in investor sentiment.",
+        "The US-Iran ceasefire deal has reduced short-term geopolitical risk ● [PHRASE], through which nearly one-fifth of global oil supply flows. This easing of tension has helped stabilise trading conditions, at least temporarily, as markets quickly reprice risk following political developments. However, while financial markets respond within minutes, the physical realities of global trade move more slowly. Shipping, ● [PHRASE], remains cautious. Vessel operators and charterers are closely monitoring security conditions, insurance costs and operational risks before fully resuming normal activity.",
+        "In practical terms, the ceasefire opens a narrow but important operational window. Delayed cargo shipments, ● [PHRASE], refined products and liquefied natural gas, may begin to move again. Supply chains across Gulf economies could see partial rebalancing if stability holds even briefly. Yet the US-Iran ceasefire deal does not resolve the structural uncertainties underlying the conflict. Insurance premiums, freight rates and crew confidence will take time to adjust. Even with calmer conditions, the system carries residual disruption that may reintroduce volatility.",
+        "The broader geopolitical landscape also remains unresolved, with multiple stakeholders maintaining strategic positions. This reinforces a key reality for global trade and shipping: stabilisation is not the same as resolution. Sustained diplomacy will be essential to ensure long-term predictability. Without it, energy markets and maritime routes will remain exposed to sudden shocks, limiting confidence across global supply chains."
+      ],
+      fragments: [
+        "a key indicator of real economic activity",
+        "including crude oil",
+        "particularly around the Strait of Hormuz"
+      ],
+      initialOrder: [0, 1, 2], // Jumbled state: Spot 1 (Index 0), Spot 2 (Index 1), Spot 3 (Index 2)
+      correctOrder: [2, 0, 1]  // Spot 1 needs Index 2, Spot 2 needs Index 0, Spot 3 needs Index 1
+    }
+  },
+  {
+    id: 8,
+    title: "Dubai launches ViruGenetics Lab to strengthen food safety monitoring",
+    description: "ViruGenetics Lab launched by Dubai Municipality will detect foodborne viruses using advanced genomic testing technologies and faster testing results systems.",
+    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=2000",
+    gameType: 'compounding-effects',
+    gameExplanation: "Identify the shared impact of these innovations. Fill in the missing word in the final paragraph.",
+    reasoning: "The lab highlights a link between advanced genomics and the safety of the populace. The word 'healthcare' compounds the effects of precision testing on sustainable urban development.",
+    content: {
+      paragraphs: [
+        "DUBAI: Dubai Municipality has launched the ViruGenetics Lab, a specialised facility dedicated to detecting foodborne viruses through advanced genomic testing technologies at Dubai Central Laboratory.",
+        "The ViruGenetics Lab is the first facility of its kind in the UAE and reflects Dubai Municipality’s _continued efforts_ to strengthen **public health** and support innovation in laboratory services across the emirate.",
+        "Officials said the laboratory can process around 60 samples daily, with capacity increasing to 100 samples during emergencies. The system is designed to provide _faster testing results_, helping authorities accelerate inspections and improve **data-driven decision-making** based on highly accurate findings.",
+        "The ViruGenetics Lab uses digital PCR technology, widely recognised as one of the most advanced molecular analysis methods available globally. The technology enables _highly sensitive_ quantitative and qualitative detection of **viral pathogens**, including norovirus and hepatitis A and E viruses.",
+        "Dubai Municipality explained that the laboratory is capable of analysing complex food samples such as seafood, dairy products, juices and fresh produce while maintaining accuracy even when analytical inhibitors are present.",
+        "All procedures are conducted according to ISO/IEC 17025 standards to ensure quality, reliability and efficiency.",
+        "Eng. Hind Mahmoud Ahmed, Director of the Dubai Central Laboratory Department at Dubai Municipality, said the launch supports Dubai’s wider strategy to establish specialised laboratories equipped with cutting-edge international technologies. She added that the initiative reinforces Dubai’s ambition to remain a global leader in health oversight and food safety.",
+        "The ViruGenetics Lab will also support collaboration with universities and research centres to strengthen scientific research and develop a national database for foodborne viruses. Authorities said the initiative will improve proactive health monitoring by providing precise genetic data linked to food supply chains.",
+        "The launch further strengthens Dubai’s growing reputation for adopting _advanced technologies_ to enhance **public safety**, [________] standards and sustainable urban development."
+      ],
+      answer: "healthcare"
+    }
+  },
+  {
+    id: 9,
+    title: "Why data literacy is becoming a must-have career skill in 2026",
+    description: "Data literacy is now essential for success in the AI-driven economy of 2026, empowering individuals and organisations to drive innovation, agility and informed decisions. Beyond technical proficiency, the true value lies in the capacity to discern patterns within chaos and convert them into actionable foresight. This evolution necessitates a shift from passive observation to active engagement with information streams. Ultimately, those who master this paradoxical balance will define the frontiers of growth and institutional resilience.",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000",
+    gameType: 'em-dash-phrases',
+    gameExplanation: "Complete the paradoxical phrases that define modern data strategy.",
+    reasoning: "Modern literacy isn't about volume, but about the human capacity to derive meaning and action from information.",
+    content: {
+      paragraphs: [
+        "The phrase ‘data is the new oil’ has been mentioned many times in the past decade, emphasizing the importance of data in a knowledge-driven economy. Just as oil fueled the Second Industrial Revolution, data now powers the age of AI, also known as the Fourth Industrial Revolution. However, the value of data cannot be fully unlocked by extraction alone; it requires interpretation, ethical judgment, and strategic application.",
+        "This is why data literacy must evolve from a niche skill to a universal competency. In a world where information overload is a real risk, those who can properly read, analyze, and act on data are most likely to succeed.",
+        "### Data is the new universal language",
+        "Data-driven decision-making is now the baseline for organizations. This means data fluency should not just be a specialist skill, but something possessed by all team members. Just as knowing a common language enables global collaboration, data literacy ensures clarity and cohesion in every decision and interaction.",
+        "It’s not having access to data but — [0].",
+        "In 2026, businesses that invest in collective data fluency will outperform those that don’t.",
+        "Additionally, individuals who speak this language will have the greatest impact across all sectors. A recent review of seven major industries (healthcare, finance, manufacturing, retail, HR, insurance, and accounting) shows broad adoption of analytics tools, with over 90 percent of organizations reporting measurable returns on their data investments.",
+        "The global data analytics market is also projected to grow by over 30 percent annually to reach almost $133 billion by 2026, reflecting explosive industry growth and reliance on data.",
+        "### The global talent gap is widening",
+        "In 2024, a staggering 75 percent of employers worldwide reported difficulty filling roles, particularly in IT and data, according to a report by ManpowerGroup. The proportion was similar across industries, such as healthcare, financial services, and energy. This means that demand for data-literate talent is much higher than supply, creating opportunities for individuals to upskill and achieve better prospects for their careers.",
+        "However, alongside the need for technical skills, being able to effectively work with data requires ‘soft’ skills, such as critical thinking, communication, and problem-solving, which are essential traits for translating analysis into action.",
+        "It’s not collecting information but — [1].",
+        "This widening data talent gap has major real-world impacts. These include delayed digital transformations, diminished agility, lower innovation capacity, and weaker productivity. In 2026, failing to cultivate data proficiency across all roles means missing out on strategic opportunities and risking being outpaced by competitors in a data driven economy.",
+        "### Data literacy fuels innovation",
+        "Data literacy doesn’t just mean producing and consuming data from a dashboard. It also includes interpreting patterns, identifying inefficiencies, and proposing new solutions. This ability transforms raw information into actionable innovation, whether it’s optimizing supply chains or creating personalized customer experiences.",
+        "Companies that embed data literacy across all roles — not just analysts — report faster product development cycles and improved agility. If the marketing, operations, and HR teams can understand data, they can collaborate effectively with technical teams, thereby reducing bottlenecks and accelerating the time to market of products and solutions.",
+        "In recent years, many business leaders have realized that AI, machine learning, and predictive analytics tools are only as effective as the humans guiding them.",
+        "It’s not AI alone but — [2].",
+        "Data literacy ensures employees can validate models, interpret outputs, and apply insights responsibly, transforming advanced tools into engines of creativity rather than black boxes.",
+        "Furthermore, organization-wide data literacy fosters a culture of curiosity, as well as a mindset of continuous improvement. Employees ask better questions, challenge assumptions, and experiment confidently, creating a feedback loop that drives innovation across products, services, and processes.",
+        "In 2026, innovation isn’t about which company has the most data.",
+        "It’s not having the most data but — [3].",
+        "Instead, the competitive advantage lies in who can understand their data best. Organizations that democratize data literacy will outpace competitors, not just in efficiency but in creating breakthrough ideas that redefine markets.",
+        "As data becomes the foundation of every decision, organizations who speak the language of data fluently and translate it into action are in the best position to succeed."
+      ],
+      answers: [
+        "understanding data",
+        "translating insight into action",
+        "humans guiding AI responsibly",
+        "understanding data best"
+      ]
+    }
+  },
+  {
+    id: 10,
+    title: "NASA Asteroid 2024 YR4: Moon Passage 2032",
+    description: "New observations confirmed that NASA asteroid 2024 YR4 will safely pass the Moon in 2032, ending earlier concerns about a possible lunar collision after data from the James Webb Space Telescope refined its path.",
+    image: "/src/assets/images/regenerated_image_1778825276253.png",
+    gameType: 'paragraph-principles',
+    gameExplanation: "Identify the missing technical terms that describe each section of the article. Terms are not present in the text.",
+    reasoning: "The article details two distinct phases of the mission: Recalibration (updating existing measurements to refine the path) and Detection (the initial discovery and early scenario dismissal).",
+    content: {
+      headline: "NASA asteroid 2024 YR4 will safely pass the Moon in December 2032 after new observations ruled out any collision risk.",
+      intro: "WASHINGTON: New observations have confirmed that NASA asteroid 2024 YR4 will safely pass the Moon in 2032, ending earlier concerns about a possible lunar collision.",
+      sections: [
+        {
+          id: 's1',
+          paragraph: "The United States National Aeronautics and Space Administration said improved measurements from the James Webb Space Telescope show the asteroid will pass at a safe distance from the lunar surface. According to updated calculations, the space rock will travel roughly 13,200 miles away from the Moon on 22 December 2032. Earlier orbital estimates had suggested a small 4.3 per cent chance that the asteroid could collide with the Moon. However, the latest data collected in February allowed scientists to refine its trajectory and rule out any possibility of impact.",
+          answer: "Recalibration",
+          alignment: "left"
+        },
+        {
+          id: 's2',
+          paragraph: "The asteroid was first discovered in late 2024 by an early warning detection system located in Chile. In early 2025, scientists briefly examined the possibility that it could collide with Earth, but that scenario was quickly dismissed after further observations. For a longer period, uncertainty remained about whether the asteroid might strike the Moon. Since spring 2025, the object had become too faint for many telescopes to track, leaving its precise path difficult to confirm. Recent observations by the James Webb Space Telescope finally provided the necessary data to determine its trajectory with greater accuracy.",
+          answer: "Detection",
+          alignment: "right"
+        }
+      ],
+      conclusion: "Scientists say the NASA asteroid 2024 YR4 will now continue along its orbit without posing a threat to either Earth or the Moon."
     }
   }
 ];
