@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta property="og:type" content="website"><meta property="og:url" content="https://cursivenews.com/read"><meta property="og:title" content="Cursive — read the photograph"><meta property="og:description" content="An interactive card. Find what hides in the frame, prove you read it."><meta property="og:image" content="https://cursivenews.com/read/share-card.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://cursivenews.com/read/share-card.png"><title>Cursive — travel piece (prototype)</title><style>html,body{margin:0;background:#e7e3da}body{padding:24px 14px;display:flex;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}</style></head><body>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta property="og:type" content="website"><meta property="og:url" content="https://cursivenews.com/read"><meta property="og:title" content="Cursive — read the photograph"><meta property="og:description" content="An interactive card. Find what hides in the frame, prove you read it."><meta property="og:image" content="https://cursivenews.com/read/share-card.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://cursivenews.com/read/share-card.png"><title>Cursive — travel piece (prototype)</title><style>html,body{margin:0;background:#e7e3da}body{min-height:100vh;padding:16px 12px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}</style></head><body>
 <style>
 #cp{--card:#f3ece0;--ink:#23262d;--ink2:#867f72;--line:#2c333a;--bub:#fbf7ef;--field:#ffffff;--accent:#3c6b34;--hl:Georgia,'Times New Roman',serif}
 #cp[data-theme="slate"]{--card:#191c22;--ink:#ece6d8;--ink2:#9a9486;--line:#e6d8bf;--bub:#232831;--field:#2b303a;--accent:#d7a13a;--hl:Georgia,'Times New Roman',serif}
 #cp[data-theme="ink"]{--card:#ffffff;--ink:#1a1d24;--ink2:#7a8090;--line:#314099;--bub:#f3f6fc;--field:#ffffff;--accent:#314099;--hl:-apple-system,'Segoe UI',Roboto,sans-serif}
-#cp{max-width:430px;margin:0 auto;color:#2b2b28;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+#cp{width:100%;max-width:468px;margin:0 auto;color:#2b2b28;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
 #cp *{box-sizing:border-box}
 #cp .ctrl{display:flex;align-items:center;gap:6px;margin:0 4px 11px;flex-wrap:wrap}
 #cp .clab{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#969389;margin-right:1px}
@@ -74,7 +74,7 @@
 #cp .stub .muted{font-size:12px;color:var(--ink2)}
 #cp .reset2{font:inherit;font-size:12.5px;padding:7px 16px;border:1px solid rgba(128,128,128,.4);background:transparent;color:var(--ink);border-radius:999px;cursor:pointer;margin-top:8px}
 #cp .cover{position:absolute;inset:0;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;background:linear-gradient(to bottom, rgba(15,15,17,.30) 0%, rgba(15,15,17,.55) 55%, rgba(15,15,17,.84) 100%);z-index:6;transition:opacity .45s ease}
-#cp:not(.cover-on) .cover{opacity:0;pointer-events:none}
+#cp:not(.cover-on) .cover{opacity:0;pointer-events:none}#cp.cover-on .top,#cp.cover-on .prompt,#cp.cover-on .head,#cp.cover-on .meta{visibility:hidden}#cp.cover-on .card{background:#16161a}
 #cp .cov-mark{position:absolute;top:16px;left:18px;font-family:Georgia,serif;font-style:italic;font-size:18px;color:#f3efe6}
 #cp .cov-h{font-family:var(--hl);font-size:25px;line-height:1.16;color:#fff;max-width:80%}
 #cp .cov-sub{font-size:13px;color:rgba(255,255,255,.82);margin-top:7px;max-width:76%;line-height:1.4}
